@@ -1,42 +1,46 @@
 # clawd-band
 
-A pixel blob lives in the band above your prompt and reacts to what Claude Code
-is doing. It thinks, edits, rummages around, drops into a shell, flinches when a
-tool bites back, and falls asleep if you leave it alone.
+A coral pixel cat lives in the band above your prompt and reacts to what Claude
+Code is doing. It thinks, edits, cranes its head after a search, yowls in a
+shell, screws its eyes shut when a tool bites back, and folds its ears down to
+sleep if you leave it alone.
 
 It is a **Claude Mod**: an ordinary plugin whose behaviour is a TypeScript hooks
 module rather than shell commands. It draws and nothing else — no input, no
 persistence, no pet to feed.
 
-> **Unofficial fan work.** The mascot is inspired by Anthropic's Claude mascot,
-> affectionately known as Clawd. It is drawn from scratch here, it is not
+> **Unofficial fan work.** The mascot takes its colour and its round, soft blob
+> body from Anthropic's Claude mascot, affectionately known as Clawd, and gives
+> it a pair of ears. Every pixel here is drawn from scratch; none of it is
 > Anthropic's artwork, and this project is not affiliated with or endorsed by
 > Anthropic.
 
 ```
-        ██████████
-      ████████████████
-    ██████    ██████    ██████
-    ████████████████████████
-    ████████████████████████
-      ████    ██████    ████
-        ██████████████
-    clawd is thinking
+      ██        ██
+    ██▒▒██    ██▒▒██
+      ████████████
+    ████████████████
+  ████░░████████░░████
+██████████████████████
+    ██████░░██░░██████
+      ████████████
+        ████████
+      clawd is thinking
 ```
 
-(The real thing is coral, and it moves.)
+(The real thing is coral, and it moves. The sheet below is the whole cast.)
 
 ## What it does
 
 | State | When | What you see |
 |---|---|---|
 | `idle` | between turns | a slow breath in and out |
-| `sleep` | ~27 seconds of quiet | eyes shut, a `z` drifting off the corner |
-| `think` | a turn started, or a tool this mod does not know | eyes roll up, ideas pop overhead |
-| `edit` | `Edit`, `MultiEdit`, `Write`, `NotebookEdit` | a pencil stub jabbing at the right edge |
-| `search` | `Read`, `Grep`, `Glob`, `WebFetch`, `WebSearch`, `Task` | leaning after a magnifier, left then right |
-| `shell` | `Bash`, `BashOutput`, `KillShell` | sparks off the top |
-| `ouch` | any tool that came back with an error | dizzy eyes, a wobble, then back to work |
+| `sleep` | ~27 seconds of quiet | ears fold down, eyes shut, a `z` drifting off |
+| `think` | a turn started, or a tool this mod does not know | eyes roll up, ideas pop between the ears |
+| `edit` | `Edit`, `MultiEdit`, `Write`, `NotebookEdit` | a pencil stub jabbing past the right ear |
+| `search` | `Read`, `Grep`, `Glob`, `WebFetch`, `WebSearch`, `Task` | the whole head cranes left, then right, after the glass |
+| `shell` | `Bash`, `BashOutput`, `KillShell` | ears back, sparks off the top, a yowl |
+| `ouch` | any tool that came back with an error | ears flat, eyes screwed shut, the whole cat wobbles |
 
 A flinch owns the blob for about 1.6 seconds however busy things get, then it
 returns to whatever it was doing — or to waiting, if the turn ended meanwhile.
@@ -62,13 +66,16 @@ command, and watch the band.
 ## Redrawing the mascot
 
 The whole mascot is text in [`hooks/sprites.ts`](hooks/sprites.ts). Every frame
-is seven rows of nine characters; one character is one pixel, drawn two terminal
-columns wide because a terminal cell is about twice as tall as it is wide.
+is nine rows of thirteen characters; one character is one pixel, drawn two
+terminal columns wide because a terminal cell is about twice as tall as it is
+wide. The ears and the head are part of the art rather than an overlay, so a
+state can fold the ears back, perk them up, or lean the whole head to one side.
 
 ```
   .  nothing (the terminal's own background shows through)
-  #  body            *  highlight          %  body shade
-  e  eye             x  dizzy eye          m  mouth          o  open mouth
+  #  body            *  sheen              %  body shade
+  i  inner ear       n  whisker
+  e  eye             x  squeezed eye       m  nose and mouth    o  open mouth
   z  cool accent (zzz, the magnifier)      y  warm accent (sparks, pencil)
   r  alarm accent
 ```
@@ -76,13 +83,15 @@ columns wide because a terminal cell is about twice as tall as it is wide.
 ```ts
   idle: [
     [
-      '.........',
-      '..#####..',
-      '.#*#####.',
-      '##e###e##',
-      '#########',
-      '.##mmm##.',
-      '..%%%%%..',
+      '...#.....#...',
+      '..#i#...#i#..',
+      '...#*#####...',
+      '..#########..',
+      '.##e#####e##.',
+      'n#####m#####n',
+      '..###m#m###..',
+      '...#######...',
+      '....%%%%%....',
     ],
     // ...
   ],

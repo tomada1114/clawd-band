@@ -1,6 +1,8 @@
 {
   "name": "clawd-band",
   "version": "0.1.0",
-  "description": "An unofficial fan-made pixel mascot that lives in the band above the prompt and reacts to what Claude is doing: thinking, editing, searching, running a shell, flinching at a tool error, and dozing off between turns.",
-  "author": { "name": "tomada1114" }
+  "description": "An unofficial fan-made pixel cat that lives in the band above the prompt and reacts to what Claude is doing: thinking, editing, craning after a search, yowling in a shell, squeezing its eyes shut at a tool error, and folding its ears down to sleep between turns.",
+  "author": {
+    "name": "tomada1114"
+  }
 }

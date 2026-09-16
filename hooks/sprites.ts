@@ -1,15 +1,19 @@
 // The whole mascot, drawn as text.
 //
-// Every frame is seven rows of nine characters. One character is one pixel; a
-// pixel is drawn two terminal columns wide, because a terminal cell is about
-// twice as tall as it is wide and a blob wants to be round. Edit the art below
-// and the mascot changes — there is no PNG, no build step, no generator.
+// Every frame is nine rows of thirteen characters. One character is one pixel;
+// a pixel is drawn two terminal columns wide, because a terminal cell is about
+// twice as tall as it is wide and the blob wants to be round. Edit the art
+// below and the mascot changes — there is no PNG, no build step, no generator.
 //
 //   .  nothing (the terminal's own background shows through)
-//   #  body            *  highlight          %  body shade
-//   e  eye             x  dizzy eye          m  mouth          o  open mouth
-//   z  cool accent (zzz, the magnifier)      y  warm accent (sparks, pencil)
+//   #  body            *  sheen               %  body shade
+//   i  inner ear       n  whisker
+//   e  eye             x  dizzy eye           m  nose and mouth      o  open mouth
+//   z  cool accent (zzz, the magnifier)       y  warm accent (sparks, pencil)
 //   r  alarm accent
+//
+// The ears and the head are part of the art, not an overlay, so a state can
+// fold the ears back, perk them up, or lean the whole head to one side.
 
 /** A colour as `Raster` wants it: 0x00RRGGBB. */
 type Rgb = number
@@ -24,10 +28,12 @@ const SPACE = 0x20
 export const PALETTE: Readonly<Record<string, Rgb>> = {
   '#': 0xd97757,
   '*': 0xf3b394,
-  '%': 0xa84f34,
+  '%': 0xbe6144,
+  i: 0xe89a8c,
+  n: 0xffe4d6,
   e: 0x2b1a14,
   x: 0x2b1a14,
-  m: 0x7a2f1e,
+  m: 0x5e2317,
   o: 0x3d1710,
   z: 0x8fb8d8,
   y: 0xf5c542,
@@ -35,8 +41,8 @@ export const PALETTE: Readonly<Record<string, Rgb>> = {
 }
 
 /** Pixels across and down in the art, before the 2x horizontal stretch. */
-export const ART_COLUMNS = 9
-export const ART_ROWS = 7
+export const ART_COLUMNS = 13
+export const ART_ROWS = 9
 
 /** How many terminal cells wide one art pixel is drawn. */
 export const PIXEL_WIDTH = 2
@@ -61,166 +67,196 @@ export type Frame = readonly string[]
  * breathes and a three-frame state drifts.
  */
 export const FRAMES: Readonly<Record<MascotState, readonly Frame[]>> = {
-  // Between turns: a slow breath in and out.
+  // Between turns: ears up, a slow breath in and out.
   idle: [
     [
-      '.........',
-      '..#####..',
-      '.#*#####.',
-      '##e###e##',
-      '#########',
-      '.##mmm##.',
-      '..%%%%%..',
+      '...#.....#...',
+      '..#i#...#i#..',
+      '...#*#####...',
+      '..#########..',
+      '.##e#####e##.',
+      'n#####m#####n',
+      '..###m#m###..',
+      '...#######...',
+      '....%%%%%....',
     ],
     [
-      '..#####..',
-      '.#*#####.',
-      '##e###e##',
-      '#########',
-      '#########',
-      '.##mmm##.',
-      '..%%%%%..',
+      '...#.....#...',
+      '..#i#...#i#..',
+      '..#*#######..',
+      '.###########.',
+      '.##e#####e##.',
+      'n#####m#####n',
+      '.####m#m####.',
+      '..#########..',
+      '...%%%%%%%...',
     ],
   ],
 
-  // Left alone long enough: eyes shut, a z drifting off the top corner.
+  // Left alone long enough: ears folded, eyes shut, a z drifting off.
   sleep: [
     [
-      '.......z.',
-      '..#####..',
-      '.#*#####.',
-      '##ee#ee##',
-      '#########',
-      '.###m###.',
-      '..%%%%%..',
+      '.........z...',
+      '..##.....##..',
+      '...#*#####...',
+      '..#########..',
+      '.##ee###ee##.',
+      'n#####m#####n',
+      '..#########..',
+      '...#######...',
+      '....%%%%%....',
     ],
     [
-      '........z',
-      '..#####..',
-      '.#*#####.',
-      '##ee#ee##',
-      '#########',
-      '.###m###.',
-      '..%%%%%..',
+      '..........z..',
+      '..##.....##..',
+      '...#*#####...',
+      '..#########..',
+      '.##ee###ee##.',
+      'n#####m#####n',
+      '..#########..',
+      '...#######...',
+      '....%%%%%....',
     ],
     [
-      '.........',
-      '..#####..',
-      '.#*#####.',
-      '##ee#ee##',
-      '#########',
-      '.##mmm##.',
-      '..%%%%%..',
+      '.............',
+      '..##.....##..',
+      '..#*#######..',
+      '.###########.',
+      '.##ee###ee##.',
+      'n#####m#####n',
+      '.###########.',
+      '..#########..',
+      '...%%%%%%%...',
     ],
   ],
 
   // Working, nothing more specific: eyes roll up, ideas pop overhead.
   think: [
     [
-      '....z....',
-      '..#####..',
-      '.#*#####.',
-      '##e###e##',
-      '#########',
-      '.##mmm##.',
-      '..%%%%%..',
+      '...#..z..#...',
+      '..#i#...#i#..',
+      '...#*#####...',
+      '..#e#####e#..',
+      '.###########.',
+      'n#####m#####n',
+      '..###m#m###..',
+      '...#######...',
+      '....%%%%%....',
     ],
     [
-      '...z.z...',
-      '..#####..',
-      '.#*#####.',
-      '#########',
-      '##e###e##',
-      '.##mmm##.',
-      '..%%%%%..',
+      '...#.z.z.#...',
+      '..#i#...#i#..',
+      '...#*#####...',
+      '..#########..',
+      '.##e#####e##.',
+      'n#####m#####n',
+      '..###m#m###..',
+      '...#######...',
+      '....%%%%%....',
     ],
   ],
 
-  // Edit / Write: a pencil stub jabbing at the right edge.
+  // Edit / Write: a pencil stub jabbing past the right ear.
   edit: [
     [
-      '.........',
-      '..#####..',
-      '.#*#####.',
-      '##e###e#y',
-      '########y',
-      '.##mmm##.',
-      '..%%%%%..',
+      '...#.....#...',
+      '..#i#...#i#..',
+      '...#*#####...',
+      '..#########y.',
+      '.##e#####e#y.',
+      'n#####m#####n',
+      '..###m#m###..',
+      '...#######...',
+      '....%%%%%....',
     ],
     [
-      '.........',
-      '..#####..',
-      '.#*#####y',
-      '##e###e#y',
-      '#########',
-      '.##mmm##.',
-      '..%%%%%..',
+      '...#.....#...',
+      '..#i#...#i#..',
+      '...#*#####.y.',
+      '..#########y.',
+      '.##e#####e##.',
+      'n#####m#####n',
+      '..###m#m###..',
+      '...#######...',
+      '....%%%%%....',
     ],
   ],
 
-  // Grep / Glob / Read: leaning after the magnifier, left then right.
+  // Grep / Glob / Read: the whole head cranes left, then right, after the glass.
   search: [
     [
-      '.........',
-      '..#####..',
-      'z#*#####.',
-      'z#e###e##',
-      '#########',
-      '.##mmm##.',
-      '..%%%%%..',
+      '..#.....#..z.',
+      '.#i#...#i#...',
+      '..#*#####....',
+      '.#########...',
+      '##e#####e##..',
+      'n#####m#####n',
+      '..###m#m###..',
+      '...#######...',
+      '....%%%%%....',
     ],
     [
-      '.........',
-      '..#####..',
-      '.#*#####z',
-      '##e###e#z',
-      '#########',
-      '.##mmm##.',
-      '..%%%%%..',
+      '.z..#.....#..',
+      '...#i#...#i#.',
+      '....#*#####..',
+      '...#########.',
+      '..##e#####e##',
+      'n#####m#####n',
+      '..###m#m###..',
+      '...#######...',
+      '....%%%%%....',
     ],
   ],
 
-  // Bash: sparks off the top, because shells are exciting.
+  // Bash: ears back, sparks off the top, and a yowl on the second frame.
   shell: [
     [
-      '..y.y.y..',
-      '..#####..',
-      '.#*#####.',
-      '##e###e##',
-      '#########',
-      '.##mmm##.',
-      '..%%%%%..',
+      '..y.y...y.y..',
+      '..##.....##..',
+      '...#*#####...',
+      '..#########..',
+      '.##e#####e##.',
+      'n#####m#####n',
+      '..###m#m###..',
+      '...#######...',
+      '....%%%%%....',
     ],
     [
-      '.y.y.y.y.',
-      '..#####..',
-      '.#*#####.',
-      '##e###e##',
-      '#########',
-      '.###o###.',
-      '..%%%%%..',
+      '.y.y.y.y.y.y.',
+      '..##.....##..',
+      '...#*#####...',
+      '..#########..',
+      '.##e#####e##.',
+      'n#####m#####n',
+      '..###ooo###..',
+      '...#######...',
+      '....%%%%%....',
     ],
   ],
 
-  // A tool came back with an error: dizzy eyes, and the whole blob wobbles.
+  // A tool came back with an error: ears flat, eyes crossed, the cat wobbles.
   ouch: [
     [
-      '.r.....r.',
-      '..#####..',
-      '.#*#####.',
-      '##x###x##',
-      '#########',
-      '.##ooo##.',
-      '..%%%%%..',
+      '.r.........r.',
+      '..##.....##..',
+      '...#######...',
+      '..#x#####x#..',
+      '.###x###x###.',
+      '###x#####x###',
+      '..###ooo###..',
+      '...#######...',
+      '....%%%%%....',
     ],
     [
-      'r.......r',
-      '.#######.',
-      '##*#####.',
-      '#x#####x#',
-      '#########',
-      '.##ooo##.',
-      '..%%%%%..',
+      'r.........r..',
+      '...##.....##.',
+      '....#######..',
+      '...#x#####x#.',
+      '..###x###x###',
+      '.###x#####x##',
+      '...###ooo###.',
+      '....#######..',
+      '.....%%%%%...',
     ],
   ],
 }
