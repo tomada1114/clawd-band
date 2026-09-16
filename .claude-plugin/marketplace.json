@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "clawd-band",
+  "owner": {
+    "name": "tomada1114"
+  },
+  "metadata": {
+    "description": "A one-plugin marketplace: the clawd-band mascot Mod.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "clawd-band",
+      "description": "An unofficial fan-made pixel cat that lives in the band above the prompt and reacts to what Claude is doing: thinking, editing, craning after a search, yowling in a shell, squeezing its eyes shut at a tool error, and folding its ears down to sleep between turns.",
+      "version": "0.1.0",
+      "author": {
+        "name": "tomada1114"
+      },
+      "source": "./plugins/clawd-band",
+      "homepage": "https://github.com/tomada1114/clawd-band",
+      "category": "fun"
+    }
+  ]
+}
