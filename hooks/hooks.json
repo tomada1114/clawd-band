@@ -1,0 +1,4 @@
+{
+  "description": "Clawd-ish pixel blob living in the band above the prompt: it works, searches, shells, flinches at tool errors, and falls asleep between turns",
+  "modules": ["./register.tsx"]
+}
